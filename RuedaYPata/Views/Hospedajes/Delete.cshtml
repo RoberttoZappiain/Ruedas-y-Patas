@@ -1,0 +1,20 @@
+@model RuedaYPata.Models.Hospedaje
+
+@{
+    ViewData["Title"] = "Eliminar Hospedaje";
+}
+
+<h1>Eliminar Hospedaje</h1>
+
+<h4>¿Está seguro que desea eliminar este hospedaje?</h4>
+<div>
+    <h5>@Model.Descripcion</h5>
+    <p><strong>Precio por día:</strong> @Model.PrecioPorDia.ToString("C")</p>
+    <p><strong>Ubicación:</strong> @Model.Ubicacion?.Nombre</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

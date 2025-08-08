@@ -1,0 +1,18 @@
+@model RuedaYPata.Models.Hospedaje
+
+@{
+    ViewData["Title"] = "Detalles del Hospedaje";
+}
+
+<h1>Detalles del Hospedaje</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Descripcion</h5>
+        <p class="card-text"><strong>Precio por día:</strong> @Model.PrecioPorDia.ToString("C")</p>
+        <p class="card-text"><strong>Ubicación:</strong> @Model.Ubicacion?.Nombre</p>
+    </div>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning mt-3">Editar</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Volver</a>

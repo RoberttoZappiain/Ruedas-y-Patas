@@ -1,22 +1,57 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RuedaYPata.Data; // Asegúrate de que este `using` apunte donde está tu DbContext
+using Microsoft.AspNetCore.Identity.UI.Services;
+using RuedaYPata.Data;
+using RuedaYPata.Models;
+using RuedaYPata.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar conexión a SQL Server
+// Configuración de la cadena de conexión
 builder.Services.AddDbContext<RuedaYPataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configurar Identity (si lo activaste al crear el proyecto)
-builder.Services.AddDefaultIdentity<IdentityUser>(options => 
-    options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<RuedaYPataContext>();
+// Configurar Identity con ApplicationUser y roles
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+})
+    .AddEntityFrameworkStores<RuedaYPataContext>()
+    .AddDefaultTokenProviders();
 
-// MVC
+// Configurar cookie para login
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+});
+
+// Configuración servicios Petfinder
+builder.Services.Configure<PetfinderSettings>(builder.Configuration.GetSection("PetfinderSettings"));
+builder.Services.AddHttpClient<PetfinderService>();
+builder.Services.AddScoped<PetfinderService>();
+
+// Registrar NullEmailSender para evitar error IEmailSender
+builder.Services.AddTransient<IEmailSender, NullEmailSender>();
+
+// Agregar controladores con vistas y Razor Pages para Identity
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
+
+// Inicializar datos (roles, usuario admin)
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    await DbInitializer.SeedAsync(userManager, roleManager);
+}
 
 // Middleware
 if (!app.Environment.IsDevelopment())
@@ -30,13 +65,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Habilita autenticación
+app.UseAuthentication();
 app.UseAuthorization();
 
-// Rutas por defecto
+// Mapear rutas MVC y Razor Pages (Identity)
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages(); // Necesario para Identity
+
+app.MapRazorPages();
 
 app.Run();

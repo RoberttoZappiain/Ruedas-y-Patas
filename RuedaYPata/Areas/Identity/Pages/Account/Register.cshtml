@@ -1,0 +1,57 @@
+﻿@page
+@model RuedaYPata.Areas.Identity.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Crear cuenta - Rueda y Pata";
+}
+
+<h2 class="text-center mb-4">Crear Cuenta en Rueda y Pata 🐾</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <form method="post" class="border rounded p-4 shadow-sm bg-light">
+            <h4 class="mb-3 text-primary">Datos de Usuario</h4>
+            
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.NombreCompleto" class="form-label"></label>
+                <input asp-for="Input.NombreCompleto" class="form-control" placeholder="Tu nombre completo" />
+                <span asp-validation-for="Input.NombreCompleto" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Direccion" class="form-label"></label>
+                <input asp-for="Input.Direccion" class="form-control" placeholder="Dirección" />
+                <span asp-validation-for="Input.Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control" placeholder="Correo electrónico" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label"></label>
+                <input asp-for="Input.Password" class="form-control" placeholder="Contraseña" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Confirmar contraseña" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+
+            <div class="mt-3 text-center">
+                <a asp-page="./Login" class="text-decoration-none">¿Ya tienes cuenta? Inicia sesión</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

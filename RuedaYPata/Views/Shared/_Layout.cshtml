@@ -10,25 +10,74 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RuedaYPata</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="/img/logo.png" alt="Rueda y Pata" width="40" height="40" class="me-2" />
+                <span class="fw-bold text-info fs-4">Ruedas y Patas</span>
+                </a>
+                <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                >
+                <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/Mascotas">Mascotas</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/Hospedajes">Hospedajes</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="/Transportes">Transporte</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Usuario autenticado -->
+                    <li class="nav-item dropdown" asp-area="Identity" asp-controller="Account" asp-action="Manage" >
+                    <a
+                        class="nav-link dropdown-toggle d-flex align-items-center"
+                        href="#"
+                        id="userDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <img src="/images/user-icon.png" alt="User" width="32" height="32" class="rounded-circle me-2" />
+                        <span>@User.Identity.Name</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/Identity/Account/Manage">Perfil</a></li>
+                        <li><a class="dropdown-item" href="/Identity/Account/Settings">Configuración</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                        <form method="post" action="/Identity/Account/Logout" class="dropdown-item p-0 m-0">
+                            <button type="submit" class="btn btn-link p-0 m-0 text-danger w-100 text-start">Cerrar sesión</button>
+                        </form>
                         </li>
                     </ul>
+                    </li>
+
+                    <!-- Usuario no autenticado -->
+                    <li class="nav-item" id="loginLink" style="display:none;">
+                    <a class="nav-link btn btn-outline-primary ms-2" href="/Identity/Account/Login">Iniciar sesión</a>
+                    </li>
+                </ul>
                 </div>
             </div>
-        </nav>
+            </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -45,5 +94,19 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const loginLink = document.getElementById('loginLink');
+    const userDropdown = document.getElementById('userDropdown');
+
+    if ('@User.Identity.IsAuthenticated' === 'True') {
+      loginLink.style.display = 'none';
+      if (userDropdown) userDropdown.style.display = 'flex';
+    } else {
+      loginLink.style.display = 'block';
+      if (userDropdown) userDropdown.style.display = 'none';
+    }
+  });
+</script>
 </body>
 </html>

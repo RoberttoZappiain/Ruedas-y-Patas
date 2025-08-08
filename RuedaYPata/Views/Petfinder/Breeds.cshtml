@@ -1,0 +1,21 @@
+@model List<string>
+
+<h2>Razas disponibles</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+else if (Model.Any())
+{
+    <ul>
+        @foreach (var breed in Model)
+        {
+            <li>@breed</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No se encontraron razas.</p>
+}
